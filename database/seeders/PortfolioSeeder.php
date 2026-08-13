@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Profile;
 use App\Models\Experience;
 use App\Models\Project;
+use App\Models\Certification;
 
 class PortfolioSeeder extends Seeder
 {
@@ -104,6 +105,30 @@ class PortfolioSeeder extends Seeder
 
         foreach ($projects as $proj) {
             Project::create($proj);
+        }
+
+        // ─── Certifications ───────────────────────────────────────────────────
+        $certifications = [
+            [
+                'title'       => 'SENIOR WEB DEVELOPER',
+                'issuer'      => 'BNSP',
+                'issuer_full' => 'Badan Nasional Sertifikasi Profesi',
+                'icon'        => 'verified_user',
+                'sort_order'  => 1,
+                'is_active'   => true,
+            ],
+            [
+                'title'       => 'SOFTWARE DEVELOPMENT',
+                'issuer'      => 'Certiport',
+                'issuer_full' => 'Pearson VUE Authorized Center',
+                'icon'        => 'terminal',
+                'sort_order'  => 2,
+                'is_active'   => true,
+            ],
+        ];
+
+        foreach ($certifications as $cert) {
+            Certification::create($cert);
         }
     }
 }

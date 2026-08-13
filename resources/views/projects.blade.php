@@ -1,98 +1,137 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html class="dark" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="All Projects - {{ $profile->name ?? 'Bimo Aditya' }}">
-    <title>All Projects - {{ $profile->name ?? 'Bimo Aditya' }}</title>
+    <meta name="description" content="Project Archive — {{ $profile->name ?? 'Bimo Aditya Pangestu' }}">
+    <title>ORBIS.NFT Archive — {{ $profile->name ?? 'Bimo Aditya Pangestu' }}</title>
     
-    {{-- Google Fonts --}}
+    {{-- Google Fonts: Anton, Condiment --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Condiment&display=swap" rel="stylesheet" />
     
     {{-- Lucide Icons --}}
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        body {
+            background-color: #010828;
+            color: #EFF4FF;
+            margin: 0;
+            padding: 0;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .grain-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            pointer-events: none;
+            opacity: 0.06;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .anton-text {
+            font-family: 'Anton', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .cursive-text {
+            font-family: 'Condiment', cursive;
+            color: #6FFF00;
+        }
+    </style>
 </head>
-<body class="bg-slate-900 leading-relaxed text-slate-400 antialiased selection:bg-teal-300/30 selection:text-teal-300">
-    
-    {{-- Cursor Glow --}}
-    <div id="cursor-glow"></div>
+<body class="selection:bg-accent-neon selection:text-void-black">
+    <div class="grain-overlay"></div>
 
-    <div class="mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
-        <div class="lg:py-24">
-            <a class="group mb-2 inline-flex items-center font-semibold leading-tight text-teal-300" href="/">
-                <i data-lucide="arrow-left" class="mr-1 h-4 w-4 transition-transform group-hover:-translate-x-2"></i>
-                {{ $profile->name ?? 'Bimo Aditya' }}
+    <div class="mx-auto min-h-screen max-w-[1831px] px-6 py-12 md:px-12 md:py-20 lg:px-24">
+        <div>
+            <a class="group mb-6 inline-flex items-center font-mono text-xs uppercase tracking-widest text-accent-neon hover:underline" href="/">
+                <i data-lucide="arrow-left" class="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-2"></i>
+                Return to Orbis Main Vault
             </a>
-            <h1 class="text-4xl font-bold tracking-tight text-slate-200 sm:text-5xl">All Projects</h1>
+            
+            <div class="mb-12">
+                <span class="font-mono text-accent-neon text-xs uppercase tracking-[0.5em] block mb-2">Master Index</span>
+                <h1 class="anton-text text-5xl md:text-7xl text-white">Full Project <span class="cursive-text normal-case text-4xl md:text-6xl">Archive</span></h1>
+            </div>
 
-            <div class="mt-12 sm:mt-24 overflow-x-auto">
-                <table class="mt-12 w-full border-collapse text-left">
-                    <thead class="sticky top-0 z-10 border-b border-slate-300/10 bg-slate-900/75 px-6 py-5 backdrop-blur">
+            <div class="mt-8 overflow-x-auto liquid-glass p-6 rounded-3xl border border-white/10">
+                <table class="w-full border-collapse text-left font-mono">
+                    <thead class="border-b border-white/10 text-xs uppercase text-white/40 tracking-widest">
                         <tr>
-                            <th class="py-4 pr-8 text-sm font-semibold text-slate-200">Year</th>
-                            <th class="py-4 pr-8 text-sm font-semibold text-slate-200">Project</th>
-                            <th class="hidden py-4 pr-8 text-sm font-semibold text-slate-200 lg:table-cell">Made at</th>
-                            <th class="hidden py-4 pr-8 text-sm font-semibold text-slate-200 lg:table-cell">Built with</th>
-                            <th class="hidden py-4 pr-8 text-sm font-semibold text-slate-200 sm:table-cell">Link</th>
+                            <th class="py-4 pr-8">Year</th>
+                            <th class="py-4 pr-8">Project</th>
+                            <th class="hidden py-4 pr-8 lg:table-cell">Made at</th>
+                            <th class="hidden py-4 pr-8 lg:table-cell">Built with</th>
+                            <th class="hidden py-4 sm:table-cell">Link</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-sm divide-y divide-white/5">
                         @forelse($projects as $proj)
-                        <tr class="border-b border-slate-300/10 last:border-none">
-                            <td class="py-4 pr-4 align-top text-sm">
-                                <div class="translate-y-px">{{ $proj->year }}</div>
+                        <tr class="hover:bg-white/[0.02] transition-colors">
+                            <td class="py-5 pr-4 align-top text-accent-neon font-bold">
+                                {{ $proj->year }}
                             </td>
-                            <td class="py-4 pr-4 align-top font-semibold leading-snug text-slate-200">
-                                <div class="block sm:hidden mb-1">
-                                    @if($proj->url)
-                                    <a class="inline-flex items-baseline font-medium leading-tight text-slate-200 hover:text-teal-300 focus-visible:text-teal-300 sm:hidden group/link text-base" href="{{ $proj->url }}" target="_blank" rel="noreferrer">
-                                        <span>{{ $proj->title }} <i data-lucide="arrow-up-right" class="inline-block w-4 h-4 ml-1 transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1"></i></span>
-                                    </a>
-                                    @else
-                                    <span>{{ $proj->title }}</span>
-                                    @endif
-                                </div>
-                                <div class="hidden sm:block">{{ $proj->title }}</div>
+                            <td class="py-5 pr-4 align-top font-medium text-white">
+                                <div class="anton-text text-lg tracking-wide mb-1">{{ $proj->title }}</div>
+                                <p class="text-xs text-white/60 font-mono normal-case max-w-md mb-2">{{ $proj->description }}</p>
+                                @if($proj->url)
+                                <a class="inline-flex items-center text-xs text-accent-neon sm:hidden hover:underline" href="{{ $proj->url }}" target="_blank" rel="noreferrer">
+                                    <span>Visit Project</span>
+                                    <i data-lucide="arrow-up-right" class="w-3 h-3 ml-1"></i>
+                                </a>
+                                @endif
                             </td>
-                            <td class="hidden py-4 pr-4 align-top text-sm lg:table-cell">
-                                <div class="translate-y-px whitespace-nowrap">{{ $proj->made_at ?? '—' }}</div>
+                            <td class="hidden py-5 pr-4 align-top text-xs text-white/60 lg:table-cell">
+                                {{ $proj->made_at ?? '—' }}
                             </td>
-                            <td class="hidden py-4 pr-4 align-top lg:table-cell">
-                                <ul class="flex -translate-y-1.5 flex-wrap">
+                            <td class="hidden py-5 pr-4 align-top lg:table-cell">
+                                <div class="flex flex-wrap gap-1.5">
                                     @foreach($proj->tags ?? [] as $tag)
-                                    <li class="my-1 mr-1.5"><div class="skill-badge">{{ $tag }}</div></li>
+                                    <span class="text-[9px] font-mono px-2 py-0.5 bg-white/5 border border-white/10 text-white/70 rounded-full">{{ $tag }}</span>
                                     @endforeach
-                                </ul>
+                                </div>
                             </td>
-                            <td class="hidden py-4 align-top sm:table-cell">
-                                <ul class="translate-y-1">
-                                    @if($proj->url)
-                                    <li class="mb-1 flex items-center">
-                                        <a class="inline-flex items-baseline font-medium leading-tight text-slate-400 hover:text-teal-300 focus-visible:text-teal-300 text-sm group/link" href="{{ $proj->url }}" target="_blank" rel="noreferrer">
-                                            <span>{{ $proj->link_label ?? $proj->url }} <i data-lucide="arrow-up-right" class="inline-block w-3 h-3 ml-1 transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1"></i></span>
-                                        </a>
-                                    </li>
-                                    @else
-                                    <li class="mb-1 text-slate-600 text-sm">—</li>
-                                    @endif
-                                </ul>
+                            <td class="hidden py-5 align-top sm:table-cell text-xs">
+                                @if($proj->url)
+                                <a class="inline-flex items-center text-accent-neon hover:underline" href="{{ $proj->url }}" target="_blank" rel="noreferrer">
+                                    <span>{{ $proj->link_label ?? 'Visit Link' }}</span>
+                                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 ml-1"></i>
+                                </a>
+                                @else
+                                <span class="text-white/30">—</span>
+                                @endif
                             </td>
                         </tr>
                         @empty
-                        {{-- Fallback static rows --}}
-                        <tr class="border-b border-slate-300/10 last:border-none">
-                            <td class="py-4 pr-4 align-top text-sm"><div class="translate-y-px">2026</div></td>
-                            <td class="py-4 pr-4 align-top font-semibold leading-snug text-slate-200">
-                                <div class="block sm:hidden mb-1"><a class="inline-flex items-baseline font-medium leading-tight text-slate-200 hover:text-teal-300 focus-visible:text-teal-300 sm:hidden group/link text-base" href="http://sipintarsman1kopang.my.id/" target="_blank" rel="noreferrer"><span>SIPINTAR SMAN1Kopang <i data-lucide="arrow-up-right" class="inline-block w-4 h-4 ml-1 transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1"></i></span></a></div>
-                                <div class="hidden sm:block">SIPINTAR SMAN1Kopang</div>
+                        <tr class="hover:bg-white/[0.02]">
+                            <td class="py-5 pr-4 align-top text-accent-neon font-bold">2026</td>
+                            <td class="py-5 pr-4 align-top text-white">
+                                <div class="anton-text text-lg">SIPINTAR SMAN1Kopang</div>
+                                <p class="text-xs text-white/60 font-mono normal-case mb-2">Integrated school system for SMAN 1 Kopang.</p>
                             </td>
-                            <td class="hidden py-4 pr-4 align-top text-sm lg:table-cell"><div class="translate-y-px whitespace-nowrap">SMAN 1 Kopang</div></td>
-                            <td class="hidden py-4 pr-4 align-top lg:table-cell"><ul class="flex -translate-y-1.5 flex-wrap"><li class="my-1 mr-1.5"><div class="skill-badge">Laravel</div></li><li class="my-1 mr-1.5"><div class="skill-badge">Tailwind CSS</div></li></ul></td>
-                            <td class="hidden py-4 align-top sm:table-cell"><ul class="translate-y-1"><li class="mb-1 flex items-center"><a class="inline-flex items-baseline font-medium leading-tight text-slate-400 hover:text-teal-300 focus-visible:text-teal-300 text-sm group/link" href="http://sipintarsman1kopang.my.id/" target="_blank" rel="noreferrer"><span>sipintarsman1kopang.my.id <i data-lucide="arrow-up-right" class="inline-block w-3 h-3 ml-1 transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1"></i></span></a></li></ul></td>
+                            <td class="hidden py-5 pr-4 align-top text-xs text-white/60 lg:table-cell">SMAN 1 Kopang</td>
+                            <td class="hidden py-5 pr-4 align-top lg:table-cell">
+                                <span class="text-[9px] font-mono px-2 py-0.5 bg-white/5 border border-white/10 text-white/70 rounded-full">LARAVEL</span>
+                            </td>
+                            <td class="hidden py-5 align-top sm:table-cell text-xs">
+                                <a class="inline-flex items-center text-accent-neon hover:underline" href="http://sipintarsman1kopang.my.id/" target="_blank">
+                                    <span>sipintarsman1kopang.my.id</span>
+                                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 ml-1"></i>
+                                </a>
+                            </td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -101,19 +140,9 @@
         </div>
     </div>
 
-    {{-- Script for Lucide Icons and Cursor Glow --}}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof lucide !== 'undefined') { lucide.createIcons(); }
-            const cursorGlow = document.getElementById('cursor-glow');
-            if (cursorGlow) {
-                document.addEventListener('mousemove', (e) => {
-                    cursorGlow.style.opacity = '1';
-                    cursorGlow.style.left = e.clientX + 'px';
-                    cursorGlow.style.top = e.clientY + 'px';
-                });
-                document.addEventListener('mouseleave', () => { cursorGlow.style.opacity = '0'; });
-            }
         });
     </script>
 </body>

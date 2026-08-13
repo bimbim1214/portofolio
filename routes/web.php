@@ -8,15 +8,17 @@ use App\Http\Controllers\Admin\ProjectController;
 use App\Models\Profile;
 use App\Models\Experience;
 use App\Models\Project;
+use App\Models\Certification;
 
 // ─── Public Pages ────────────────────────────────────────────────────────────
 
 Route::get('/', function () {
-    $profile     = Profile::first();
-    $experiences = Experience::orderBy('sort_order')->get();
-    $homeProjects = Project::where('show_on_home', true)->orderBy('sort_order')->get();
+    $profile          = Profile::first();
+    $experiences      = Experience::orderBy('sort_order')->get();
+    $homeProjects     = Project::where('show_on_home', true)->orderBy('sort_order')->get();
+    $certifications   = Certification::where('is_active', true)->orderBy('sort_order')->get();
 
-    return view('welcome', compact('profile', 'experiences', 'homeProjects'));
+    return view('welcome', compact('profile', 'experiences', 'homeProjects', 'certifications'));
 })->name('home');
 
 Route::get('/projects', function () {
