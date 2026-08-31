@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Profile;
 use App\Models\Experience;
 use App\Models\Project;
+use App\Models\Certification;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -52,8 +53,9 @@ class AdminController extends Controller
         $profile        = Profile::first();
         $experiences    = Experience::orderBy('sort_order')->get();
         $projects       = Project::orderBy('sort_order')->get();
+        $certifications = Certification::orderBy('sort_order')->get();
         $latestProjects = Project::latest()->take(3)->get();
 
-        return view('admin.dashboard', compact('profile', 'experiences', 'projects', 'latestProjects'));
+        return view('admin.dashboard', compact('profile', 'experiences', 'projects', 'certifications', 'latestProjects'));
     }
 }

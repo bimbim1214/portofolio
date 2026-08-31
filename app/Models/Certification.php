@@ -24,4 +24,10 @@ class Certification extends Model
         'expiry_date' => 'date',
         'is_active'   => 'boolean',
     ];
+
+    public function getImageUrlAttribute()
+    {
+        $path = 'images/certificates/' . strtoupper(str_replace(' ', '_', $this->title)) . '.jpg';
+        return file_exists(public_path($path)) ? $path : null;
+    }
 }

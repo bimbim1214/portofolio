@@ -24,11 +24,12 @@ class PortfolioSeeder extends Seeder
             'cv_path'      => null,
             'github_url'   => 'https://github.com/bimbim1214',
             'linkedin_url' => 'https://www.linkedin.com/in/bimo-aditya-pangestu',
-            'email'        => 'bimoadityapangestu@gmail.com',
+            'email'        => 'creatifbimbim@gmail.com',
             'whatsapp'     => 'https://wa.me/62895334634949',
         ]);
 
         // ─── Experiences ─────────────────────────────────────────────────────
+        Experience::truncate();
         $experiences = [
             [
                 'date_range'  => 'Apr 2026 — May 2026',
@@ -64,42 +65,55 @@ class PortfolioSeeder extends Seeder
         }
 
         // ─── Projects ─────────────────────────────────────────────────────────
+        Project::truncate();
         $projects = [
             [
                 'year'         => '2026',
                 'title'        => 'SIPINTAR SMAN1Kopang',
                 'made_at'      => 'SMAN 1 Kopang',
-                'url'          => 'http://sipintarsman1kopang.my.id/',
+                'url'          => 'https://sipintarsman1kopang.my.id/login',
                 'link_label'   => 'sipintarsman1kopang.my.id',
-                'description'  => 'Sistem pengelolaan guru, murid, serta kalkulasi perhitungan poin murid terintegrasi untuk SMA Negeri 1 Kopang.',
-                'tags'         => ['Laravel', 'PHP'],
-                'image_path'   => null,
+                'description'  => 'Mengembangkan sistem pembinaan integritas dan karakter siswa berbasis web dari sisi frontend, backend, hingga integrasi database. Membangun fitur autentikasi, pengelolaan data, validasi formulir, serta merancang tampilan responsif sesuai identitas sekolah. Melakukan testing, debugging, deployment, dan konfigurasi aplikasi pada server produksi.',
+                'tags'         => ['Laravel', 'MySQL', 'PHP'],
+                'image_path'   => 'images/projects/sipintar.png',
                 'show_on_home' => true,
                 'sort_order'   => 1,
             ],
             [
                 'year'         => '2026',
-                'title'        => 'Website SMAN 1 Kopang',
+                'title'        => 'Website Profil SMAN 1 Kopang',
                 'made_at'      => 'SMAN 1 Kopang',
-                'url'          => 'https://smanegeri1kopang.sch.id',
+                'url'          => 'https://smanegeri1kopang.sch.id/',
                 'link_label'   => 'smanegeri1kopang.sch.id',
-                'description'  => 'Pengembangan dan deployment website sekolah resmi SMAN 1 Kopang.',
-                'tags'         => ['Web Development'],
-                'image_path'   => null,
-                'show_on_home' => false,
+                'description'  => 'Pengembangan dan deployment website resmi profil SMA Negeri 1 Kopang. Menyajikan sistem manajemen informasi sekolah, publikasi berita, pengumuman resmi, serta galeri kegiatan interaktif untuk memperluas jangkauan informasi publik sekolah.',
+                'tags'         => ['Web Development', 'PHP', 'Tailwind CSS'],
+                'image_path'   => 'images/projects/profileSMAN.png',
+                'show_on_home' => true,
                 'sort_order'   => 2,
             ],
             [
                 'year'         => '2025',
-                'title'        => 'Dashboard Pemerintahan',
-                'made_at'      => 'DISKOMINFO',
-                'url'          => 'https://www.figma.com/design/KKYYQEccr79Qti7S8DvR5A/Untitled--Copy-?node-id=0-1&t=z7olsinEVYYod339-1',
-                'link_label'   => 'Figma Prototype',
-                'description'  => 'Mendesain user interface untuk sistem dan dashboard aplikasi pemerintahan.',
-                'tags'         => ['Figma'],
-                'image_path'   => null,
-                'show_on_home' => false,
+                'title'        => 'Audit System App',
+                'made_at'      => 'Audit System',
+                'url'          => 'https://audit2019.ur-braindevpro.com/',
+                'link_label'   => 'audit2019.ur-braindevpro.com',
+                'description'  => 'Pengembangan platform sistem audit terintegrasi untuk pengelolaan, evaluasi, pelaporan, dan manajemen audit compliance. Menyediakan dashboard statistik interaktif, manajemen temuan audit, pelacakan histori, serta ekspor laporan otomatis.',
+                'tags'         => ['Laravel', 'MySQL', 'PHP'],
+                'image_path'   => 'images/projects/audit.png',
+                'show_on_home' => true,
                 'sort_order'   => 3,
+            ],
+            [
+                'year'         => '2025',
+                'title'        => 'UI/UX Design — Bantulpedia',
+                'made_at'      => 'DISKOMINFO',
+                'url'          => 'https://www.figma.com/design/KKYYQEccr79Qti7S8DvR5A/Untitled--Copy-?node-id=0-1&t=5N7coDOZfrqZPaiR-1',
+                'link_label'   => 'figma.com/bantulpedia',
+                'description'  => 'Mendesain antarmuka pengguna (UI/UX) untuk aplikasi Bantulpedia menggunakan Figma. Merancang wireframe, prototype interaktif, komponen desain sistem, dan alur pengguna yang intuitif untuk aplikasi informasi daerah Bantul.',
+                'tags'         => ['Figma', 'UI/UX Design', 'Prototyping'],
+                'image_path'   => 'images/projects/designbantulpedia.png',
+                'show_on_home' => true,
+                'sort_order'   => 4,
             ],
         ];
 
@@ -108,6 +122,7 @@ class PortfolioSeeder extends Seeder
         }
 
         // ─── Certifications ───────────────────────────────────────────────────
+        Certification::truncate();
         $certifications = [
             [
                 'title'       => 'SENIOR WEB DEVELOPER',
