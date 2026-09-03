@@ -1,0 +1,37 @@
+{
+    "version": 2,
+    "framework": null,
+    "functions": {
+        "api/index.php": { "runtime": "vercel-php@0.9.0" }
+    },
+    "routes": [
+        { "src": "/(build|css|js|images|pdf)/(.*)", "dest": "/public/$1/$2" },
+        { "src": "/(favicon\\.ico|favicon\\.png|robots\\.txt)", "dest": "/public/$1" },
+        { "src": "/(.*\\.(?:css|js|png|jpg|jpeg|gif|svg|ico|ttf|woff|woff2|webp|avif|pdf|txt))$", "dest": "/public/$1" },
+        { "src": "/(.*)", "dest": "/api/index.php" }
+    ],
+    "buildCommand": "npm run build",
+    "outputDirectory": "public",
+    "env": {
+        "APP_ENV": "production",
+        "APP_DEBUG": "false",
+        "APP_URL": "https://bimoadityaporto-9ve0ap534-bimbim1214s-projects.vercel.app",
+        "ASSET_URL": "/",
+        "APP_KEY": "base64:CXZRH1oC4MrW+HpHX3+NobuQ59g2dAUOzi0vPOZ9/T0=",
+        "APP_CONFIG_CACHE": "/tmp/config.php",
+        "APP_EVENTS_CACHE": "/tmp/events.php",
+        "APP_PACKAGES_CACHE": "/tmp/packages.php",
+        "APP_ROUTES_CACHE": "/tmp/routes.php",
+        "APP_SERVICES_CACHE": "/tmp/services.php",
+        "VIEW_COMPILED_PATH": "/tmp",
+        "CACHE_DRIVER": "array",
+        "LOG_CHANNEL": "stderr",
+        "SESSION_DRIVER": "cookie",
+        "DB_CONNECTION": "mysql",
+        "DB_HOST": "h56bap.h.filess.io",
+        "DB_PORT": "3307",
+        "DB_DATABASE": "portofolio_adventure",
+        "DB_USERNAME": "portofolio_adventure",
+        "DB_PASSWORD": "fd6b42f958463c46e9923b2b15fd3919b2af0a5f"
+    }
+}

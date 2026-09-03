@@ -172,6 +172,13 @@
                     </svg>
                     <span>Experience Log</span>
                 </button>
+
+                <button class="nav-tab" onclick="switchTab('cv', this)" id="tab-cv-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <span>CV Manager</span>
+                </button>
             </nav>
 
             {{-- Footer --}}
@@ -374,17 +381,34 @@
                                 </div>
 
                                 <div style="border-top: 1px solid var(--border-thin); padding-top: 20px;">
-                                    <label class="form-label">Upload CV (PDF)</label>
-                                    @if($profile && $profile->cv_path)
-                                        <p style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent-mint); margin-bottom: 8px;">
-                                            Current CV: {{ basename($profile->cv_path) }}
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <label class="form-label" style="margin-bottom: 0;">Curriculum Vitae (CV)</label>
+                                        @if($cvFile)
+                                            <a href="{{ route('download.cv') }}?v={{ $cvFile->updated_at->timestamp }}" target="_blank" style="font-size: 0.72rem; color: var(--accent-mint); text-decoration: none; font-family: var(--font-mono); display: inline-flex; align-items: center; gap: 4px;">
+                                                <span class="material-symbols-outlined" style="font-size: 14px;">visibility</span>
+                                                <span>Lihat CV</span>
+                                            </a>
+                                        @endif
+                                    </div>
+                                    @if($cvFile)
+                                        <div style="background: rgba(156, 252, 230, 0.05); border: 1px dashed rgba(156, 252, 230, 0.25); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center; gap: 8px; overflow: hidden;">
+                                                <span class="material-symbols-outlined" style="color: var(--accent-mint); font-size: 18px;">picture_as_pdf</span>
+                                                <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                    {{ $cvFile->original_name }}
+                                                </span>
+                                            </div>
+                                            <span class="cert-badge-active" style="font-size: 0.6rem; padding: 1px 6px;">Aktif</span>
+                                        </div>
+                                    @else
+                                        <p style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); margin-bottom: 10px;">
+                                            Menggunakan file CV default (bawaan).
                                         </p>
                                     @endif
-                                    <button type="button" class="profile-avatar-upload-btn" style="width: 100%; text-align: center; justify-content: center; display: flex; gap: 8px;" onclick="document.getElementById('cv-input').click()">
-                                        Select CV File (PDF)
+                                    <button type="button" class="profile-avatar-upload-btn" style="width: 100%; text-align: center; justify-content: center; display: flex; align-items: center; gap: 8px;" onclick="switchTab('cv', document.getElementById('tab-cv-btn'))">
+                                        <span class="material-symbols-outlined" style="font-size: 16px;">upload_file</span>
+                                        <span>Kelola &amp; Upload di CV Manager</span>
                                     </button>
-                                    <input type="file" id="cv-input" name="cv" accept=".pdf" class="hidden" onchange="document.getElementById('cv-file-name').textContent = this.files[0]?.name || ''">
-                                    <span id="cv-file-name" style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono); margin-top: 4px; display: block; text-align: center;"></span>
                                 </div>
                             </div>
                         </div>
@@ -531,6 +555,136 @@
                             Belum ada sertifikat terdaftar.
                         </div>
                     @endforelse
+                </div>
+            </div>
+
+            {{-- ══════════════════════════════════════════════════════
+                 TAB: CV MANAGER
+                 ══════════════════════════════════════════════════════ --}}
+            <div id="tab-cv" class="tab-section">
+                <div>
+                    <h1 class="welcome-title" style="font-size: 1.8rem;">CV Manager</h1>
+                    <p class="welcome-subtitle">Upload dan kelola file CV Anda. CV aktif akan langsung tersedia di halaman portfolio.</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 8px;">
+
+                    {{-- Card: Upload CV Baru --}}
+                    <div class="admin-card" style="display: flex; flex-direction: column; gap: 20px;">
+                        <div>
+                            <span class="form-label" style="font-size: 0.9rem;">Upload CV Baru</span>
+                            <p style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
+                                Unggah file PDF baru. CV lama akan otomatis terhapus dan digantikan oleh yang baru.
+                            </p>
+                        </div>
+
+                        <form action="{{ route('admin.cv.store') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+
+                            {{-- Drop zone visual --}}
+                            <div id="cv-drop-zone" style="border: 2px dashed rgba(156, 252, 230, 0.25); border-radius: 12px; padding: 32px 20px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s;"
+                                 onclick="document.getElementById('cv-file-upload').click()"
+                                 ondragover="event.preventDefault(); this.style.borderColor='rgba(156,252,230,0.7)'; this.style.background='rgba(156,252,230,0.04)';"
+                                 ondragleave="this.style.borderColor='rgba(156,252,230,0.25)'; this.style.background='';"
+                                 ondrop="event.preventDefault(); this.style.borderColor='rgba(156,252,230,0.25)'; this.style.background=''; handleCvDrop(event);">
+                                <span class="material-symbols-outlined" style="font-size: 40px; color: rgba(156,252,230,0.4); display: block; margin-bottom: 12px;">upload_file</span>
+                                <p style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-secondary);">Klik atau drag &amp; drop file PDF di sini</p>
+                                <p style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); margin-top: 4px;">Format PDF · Maks 20 MB</p>
+                            </div>
+                            <input type="file" id="cv-file-upload" name="cv" accept=".pdf,application/pdf" class="hidden"
+                                   onchange="previewCvFile(this)">
+
+                            {{-- Preview file terpilih --}}
+                            <div id="cv-selected-preview" style="display: none; background: rgba(156,252,230,0.05); border: 1px solid rgba(156,252,230,0.2); border-radius: 8px; padding: 12px 16px; display: none; align-items: center; gap: 12px; margin-top: 12px;">
+                                <span class="material-symbols-outlined" style="color: var(--accent-mint); font-size: 28px; flex-shrink: 0;">picture_as_pdf</span>
+                                <div style="flex: 1; overflow: hidden;">
+                                    <p id="cv-selected-name" style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></p>
+                                    <p id="cv-selected-size" style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); margin-top: 2px;"></p>
+                                </div>
+                                <button type="button" onclick="clearCvFile()" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px;">
+                                    <span class="material-symbols-outlined" style="font-size: 18px;">close</span>
+                                </button>
+                            </div>
+
+                            @if($errors->has('cv'))
+                                <p style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent-red); margin-top: 8px;">
+                                    {{ $errors->first('cv') }}
+                                </p>
+                            @endif
+
+                            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px; justify-content: center;">
+                                <span class="material-symbols-outlined" style="font-size: 16px;">upload</span>
+                                Upload &amp; Simpan CV
+                            </button>
+                        </form>
+                    </div>
+
+                    {{-- Card: Status CV Aktif --}}
+                    <div class="admin-card" style="display: flex; flex-direction: column; gap: 20px;">
+                        <div>
+                            <span class="form-label" style="font-size: 0.9rem;">Status CV Aktif</span>
+                            <p style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
+                                CV di bawah ini yang saat ini tampil ke pengunjung portfolio Anda.
+                            </p>
+                        </div>
+
+                        @if($cvFile)
+                            {{-- CV tersedia --}}
+                            <div style="background: rgba(156, 252, 230, 0.05); border: 1px solid rgba(156, 252, 230, 0.2); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px; flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span class="material-symbols-outlined" style="color: var(--accent-mint); font-size: 40px;">picture_as_pdf</span>
+                                    <div style="overflow: hidden;">
+                                        <p style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600;">
+                                            {{ $cvFile->original_name }}
+                                        </p>
+                                        <p style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">
+                                            {{ $cvFile->file_size_formatted }} &nbsp;·&nbsp;
+                                            Diupload {{ $cvFile->created_at->diffForHumans() }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 4px;">
+                                    <span class="cert-badge-active" style="display: inline-flex; align-items: center; gap: 4px;">
+                                        <span style="width: 6px; height: 6px; background: #6FFF00; border-radius: 50%; display: inline-block;"></span>
+                                        Aktif
+                                    </span>
+                                </div>
+
+                                <div style="display: flex; gap: 10px; margin-top: auto;">
+                                    <a href="{{ route('download.cv') }}?v={{ $cvFile->updated_at->timestamp }}" target="_blank" class="btn btn-secondary" style="flex: 1; justify-content: center; text-decoration: none; text-align: center;">
+                                        <span class="material-symbols-outlined" style="font-size: 15px;">visibility</span>
+                                        Lihat CV
+                                    </a>
+                                    <form action="{{ route('admin.cv.destroy') }}" method="POST" style="flex: 1;"
+                                          onsubmit="return confirm('Hapus CV aktif? Tombol download di halaman user tidak akan tersedia sampai Anda upload CV baru.')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn" style="width: 100%; background: rgba(248, 113, 113, 0.1); color: var(--accent-red); border: 1px solid rgba(248,113,113,0.3); justify-content: center;">
+                                            <span class="material-symbols-outlined" style="font-size: 15px;">delete</span>
+                                            Hapus CV
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        @else
+                            {{-- Tidak ada CV --}}
+                            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.08); border-radius: 12px; padding: 40px 20px; text-align: center;">
+                                <span class="material-symbols-outlined" style="font-size: 48px; color: rgba(255,255,255,0.15);">description</span>
+                                <div>
+                                    <p style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-secondary);">Belum ada CV yang diupload</p>
+                                    <p style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">
+                                        Upload CV Anda menggunakan form di sebelah kiri.
+                                    </p>
+                                </div>
+                                @if(file_exists(public_path('pdf/Bimo_Aditya_Pangestu_CV.pdf')))
+                                    <p style="font-family: var(--font-mono); font-size: 0.68rem; color: rgba(156,252,230,0.5); border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-top: 4px;">
+                                        ℹ️ Halaman user saat ini menggunakan CV bawaan (Bimo_Aditya_Pangestu_CV.pdf)
+                                    </p>
+                                @endif
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
 
@@ -1005,10 +1159,44 @@
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const tabParam = urlParams.get('tab');
-            if (tabParam && ['overview', 'profile', 'projects', 'certifications', 'experience'].includes(tabParam)) {
+            if (tabParam && ['overview', 'profile', 'projects', 'certifications', 'experience', 'cv'].includes(tabParam)) {
                 switchTab(tabParam, document.getElementById('tab-' + tabParam + '-btn'));
             }
         });
+
+        /* ── CV File Preview Helpers ─────────────────────────────── */
+        function previewCvFile(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const preview = document.getElementById('cv-selected-preview');
+                document.getElementById('cv-selected-name').textContent = file.name;
+                document.getElementById('cv-selected-size').textContent = formatBytes(file.size);
+                preview.style.display = 'flex';
+            }
+        }
+
+        function handleCvDrop(event) {
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                const input = document.getElementById('cv-file-upload');
+                // DataTransfer trick to assign dropped file to input
+                const dt = new DataTransfer();
+                dt.items.add(files[0]);
+                input.files = dt.files;
+                previewCvFile(input);
+            }
+        }
+
+        function clearCvFile() {
+            const input = document.getElementById('cv-file-upload');
+            input.value = '';
+            document.getElementById('cv-selected-preview').style.display = 'none';
+        }
+
+        function formatBytes(bytes) {
+            if (bytes >= 1048576) return (bytes / 1048576).toFixed(2) + ' MB';
+            return (bytes / 1024).toFixed(1) + ' KB';
+        }
     </script>
 </body>
 </html>

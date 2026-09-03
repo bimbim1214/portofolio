@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Profile;
-use App\Models\Experience;
-use App\Models\Project;
 use App\Models\Certification;
-
+use App\Models\CvFile;
+use App\Models\Experience;
+use App\Models\Profile;
+use App\Models\Project;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
@@ -18,6 +18,7 @@ class AdminController extends Controller
         if (Auth::check()) {
             return redirect()->route('admin.dashboard');
         }
+
         return view('admin.login');
     }
 
@@ -31,6 +32,7 @@ class AdminController extends Controller
 
         if (Auth::attempt(['name' => $request->username, 'password' => $request->password])) {
             $request->session()->regenerate();
+
             return redirect()->route('admin.dashboard')->with('success', 'Selamat datang, Admin!');
         }
 
@@ -43,19 +45,22 @@ class AdminController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
         return redirect()->route('admin.login')->with('success', 'Berhasil logout.');
     }
 
     // Admin dashboard
     public function dashboard()
     {
-        $profile        = Profile::first();
-        $experiences    = Experience::orderBy('sort_order')->get();
-        $projects       = Project::orderBy('sort_order')->get();
+        $profile = Profile::first();
+        $experiences = Experience::orderBy('sort_order')->get();
+        $projects = Project::orderBy('sort_order')->get();
         $certifications = Certification::orderBy('sort_order')->get();
         $latestProjects = Project::latest()->take(3)->get();
+        $cvFile = CvFile::getCurrent();
 
-        return view('admin.dashboard', compact('profile', 'experiences', 'projects', 'certifications', 'latestProjects'));
+        return view('admin.dashboard', compact(
+            'profile', 'experiences', 'projects', 'certifications', 'latestProjects', 'cvFile'
+        ));
     }
 }

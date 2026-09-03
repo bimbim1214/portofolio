@@ -22,12 +22,13 @@ class Certification extends Model
     protected $casts = [
         'issued_date' => 'date',
         'expiry_date' => 'date',
-        'is_active'   => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     public function getImageUrlAttribute()
     {
-        $path = 'images/certificates/' . strtoupper(str_replace(' ', '_', $this->title)) . '.jpg';
+        $path = 'images/certificates/'.strtoupper(str_replace(' ', '_', $this->title)).'.jpg';
+
         return file_exists(public_path($path)) ? $path : null;
     }
 }

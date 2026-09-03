@@ -22,7 +22,7 @@ class Project extends Model
     ];
 
     protected $casts = [
-        'tags'         => 'array',
+        'tags' => 'array',
         'show_on_home' => 'boolean',
     ];
 }

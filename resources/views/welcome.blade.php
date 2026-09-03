@@ -393,7 +393,7 @@
                     <span data-i18n="hero.crafted">Crafted by</span> <span class="text-white">{{ $profile->name ?? 'Bimo Aditya Pangestu' }}</span> — {{ $profile->headline ?? 'Full Stack Developer & UI/UX Designer building the infrastructure of the digital frontier.' }}
                 </p>
                 <div class="flex gap-4">
-                    <a href="{{ route('download.cv') }}" target="_blank" rel="noopener noreferrer" class="px-10 py-4 bg-accent-neon text-void-black anton-text text-xl hover:scale-105 transition-transform rounded-sm inline-flex items-center gap-3 shadow-lg shadow-accent-neon/20 cursor-pointer" data-i18n="hero.mint">
+                    <a href="{{ route('download.cv') }}?v={{ $cvFile ? $cvFile->updated_at->timestamp : time() }}" target="_blank" rel="noopener noreferrer" class="px-10 py-4 bg-accent-neon text-void-black anton-text text-xl hover:scale-105 transition-transform rounded-sm inline-flex items-center gap-3 shadow-lg shadow-accent-neon/20 cursor-pointer" data-i18n="hero.mint">
                         <span>MINT PORTFOLIO / CV</span>
                         <span class="material-symbols-outlined text-xl">open_in_new</span>
                     </a>
@@ -449,164 +449,84 @@
                 </p>
             </div>
 
+            <?php
+                $initialProjects = $homeProjects->take(3);
+                $moreProjects = $homeProjects->skip(3);
+            ?>
+
             {{-- First 3 projects (always visible) --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="projects-initial-grid">
-
-                {{-- Project 1: SIPINTAR --}}
+                @forelse($initialProjects as $proj)
                 <div class="project-card liquid-glass rounded-3xl overflow-hidden group border border-white/5 hover:border-accent-neon/30 transition-all duration-500 motion-fade-up cursor-pointer"
-                    role="button" tabindex="0" aria-label="View project details for SIPINTAR SMAN1Kopang"
-                    data-project-title="SIPINTAR SMAN1Kopang"
-                    data-project-cat="Web Application"
+                    role="button" tabindex="0" aria-label="View project details for {{ $proj->title }}"
+                    data-project-title="{{ $proj->title }}"
+                    data-project-cat="{{ $proj->made_at ?? 'Web Application' }}"
                     data-project-rarity="EPIC"
-                    data-project-desc="Mengembangkan sistem pembinaan integritas dan karakter siswa berbasis web dari sisi frontend, backend, hingga integrasi
-database. Membangun fitur autentikasi, pengelolaan data, validasi formulir, serta merancang tampilan responsif sesuai identitas
-sekolah. Melakukan testing, debugging, deployment, dan konfigurasi aplikasi pada server produksi."
-                    data-project-src="{{ asset('images/projects/sipintar.png') }}"
-                    data-project-url="https://sipintarsman1kopang.my.id/login"
-                    data-project-tags="LARAVEL,MYSQL,PHP">
+                    data-project-desc="{{ $proj->description }}"
+                    data-project-src="{{ $proj->image_path ? asset($proj->image_path) : asset('images/projects/sipintar.png') }}"
+                    data-project-url="{{ $proj->url ?? '#' }}"
+                    data-project-tags="{{ implode(',', $proj->tags ?? []) }}">
                     <div class="relative aspect-[4/5] overflow-hidden">
-                        <img src="{{ asset('images/projects/sipintar.png') }}" alt="SIPINTAR SMAN1Kopang" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+                        <img src="{{ $proj->image_path ? asset($proj->image_path) : asset('images/projects/sipintar.png') }}" alt="{{ $proj->title }}" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
                         <div class="absolute inset-0 bg-gradient-to-t from-void-black via-void-black/30 to-transparent"></div>
                         <div class="absolute bottom-0 left-0 right-0 p-8 space-y-4">
                             <div class="flex justify-between items-end">
                                 <div>
-                                    <p class="text-[10px] font-mono uppercase text-accent-neon tracking-widest mb-1" data-i18n="projects.p1.cat">Web Application</p>
-                                    <h3 class="anton-text text-3xl text-white">SIPINTAR</h3>
+                                    <p class="text-[10px] font-mono uppercase text-accent-neon tracking-widest mb-1">{{ $proj->made_at ?? 'Web Application' }}</p>
+                                    <h3 class="anton-text text-3xl text-white">{{ $proj->title }}</h3>
                                 </div>
                                 <div class="text-right">
                                     <p class="text-[10px] font-mono text-white/40 uppercase" data-i18n="projects.rarity">Rarity</p>
-                                    <p class="font-mono text-white text-sm" data-i18n="projects.p1.epic">EPIC</p>
+                                    <p class="font-mono text-white text-sm">EPIC</p>
                                 </div>
                             </div>
                             <div class="space-y-2">
                                 <div class="rarity-bar"><div class="rarity-fill w-[88%]"></div></div>
                                 <div class="flex justify-between text-[10px] font-mono text-white/40">
-                                    <span data-i18n="projects.p1.util">UTILITY: SCHOOL SYSTEM</span>
+                                    <span>{{ $proj->link_label ? 'UTILITY: ' . strtoupper($proj->link_label) : ($proj->made_at ? 'UTILITY: ' . strtoupper($proj->made_at) : 'UTILITY: SYSTEM') }}</span>
                                     <span>88%</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="p-8 space-y-4">
-                        <p class="text-xs text-secondary/80 font-mono uppercase leading-relaxed h-12 overflow-hidden" data-i18n="projects.p1.desc">Integrated school information system for SMAN 1 Kopang.</p>
+                        <p class="text-xs text-secondary/80 font-mono uppercase leading-relaxed h-12 overflow-hidden">{{ $proj->description }}</p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="text-[9px] font-mono px-2 py-1 bg-white/5 border border-white/10 text-white/60">LARAVEL</span>
-                            <span class="text-[9px] font-mono px-2 py-1 bg-white/5 border border-white/10 text-white/60">MYSQL</span>
-                            <span class="text-[9px] font-mono px-2 py-1 bg-white/5 border border-white/10 text-white/60">PHP</span>
+                            @foreach($proj->tags ?? [] as $tag)
+                            <span class="text-[9px] font-mono px-2 py-1 bg-white/5 border border-white/10 text-white/60">{{ $tag }}</span>
+                            @endforeach
                         </div>
                     </div>
                 </div>
-
-                {{-- Project 2: PROFIL SMAN 1 KOPANG --}}
-                <div class="project-card liquid-glass rounded-3xl overflow-hidden group border border-white/5 hover:border-accent-neon/30 transition-all duration-500 motion-fade-up cursor-pointer"
-                    role="button" tabindex="0" aria-label="View project details for Profil SMAN 1 Kopang"
-                    data-project-title="Profil SMAN 1 Kopang"
-                    data-project-cat="Web Application"
-                    data-project-rarity="LEGENDARY"
-                    data-project-desc="Website resmi profil SMA Negeri 1 Kopang yang menyajikan informasi sekolah, berita, pengumuman, dan galeri kegiatan."
-                    data-project-src="{{ asset('images/projects/profileSMAN.png') }}"
-                    data-project-url="https://smanegeri1kopang.sch.id/"
-                    data-project-tags="WEB DEVELOPMENT,PHP,TAILWIND CSS">
-                    <div class="relative aspect-[4/5] overflow-hidden">
-                        <img src="{{ asset('images/projects/profileSMAN.png') }}" alt="Website Profil SMAN 1 Kopang" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-void-black via-void-black/30 to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 right-0 p-8 space-y-4">
-                            <div class="flex justify-between items-end">
-                                <div>
-                                    <p class="text-[10px] font-mono uppercase text-accent-neon tracking-widest mb-1" data-i18n="projects.p2.cat">Web Application</p>
-                                    <h3 class="anton-text text-3xl text-white">PROFIL SMAN 1 KOPANG</h3>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-[10px] font-mono text-white/40 uppercase" data-i18n="projects.rarity">Rarity</p>
-                                    <p class="font-mono text-white text-sm" data-i18n="projects.p2.legendary">LEGENDARY</p>
-                                </div>
-                            </div>
-                            <div class="space-y-2">
-                                <div class="rarity-bar"><div class="rarity-fill w-[94%]"></div></div>
-                                <div class="flex justify-between text-[10px] font-mono text-white/40">
-                                    <span data-i18n="projects.p2.util">UTILITY: SCHOOL PORTAL</span>
-                                    <span>94%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-8 space-y-4">
-                        <p class="text-xs text-secondary/80 font-mono uppercase leading-relaxed h-12 overflow-hidden" data-i18n="projects.p2.desc">Official website profile for SMAN 1 Kopang presenting school news, info, announcements, and activity gallery.</p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="text-[9px] font-mono px-2 py-1 bg-white/5 border border-white/10 text-white/60">WEB DEVELOPMENT</span>
-                            <span class="text-[9px] font-mono px-2 py-1 bg-white/5 border border-white/10 text-white/60">PHP</span>
-                            <span class="text-[9px] font-mono px-2 py-1 bg-white/5 border border-white/10 text-white/60">TAILWIND CSS</span>
-                        </div>
-                    </div>
+                @empty
+                <div class="col-span-full text-center py-12 text-secondary/60 font-mono text-xs uppercase">
+                    No active projects registered.
                 </div>
-
-                {{-- Project 3: AUDIT SYSTEM --}}
-                <div class="project-card liquid-glass rounded-3xl overflow-hidden group border border-white/5 hover:border-accent-neon/30 transition-all duration-500 motion-fade-up cursor-pointer"
-                    role="button" tabindex="0" aria-label="View project details for System Audit App"
-                    data-project-title="System Audit App"
-                    data-project-cat="Web Application"
-                    data-project-rarity="EPIC"
-                    data-project-desc="Platform sistem audit terintegrasi untuk pengelolaan, evaluasi, pelaporan, dan manajemen audit."
-                    data-project-src="{{ asset('images/projects/audit.png') }}"
-                    data-project-url="https://audit2019.ur-braindevpro.com/"
-                    data-project-tags="LARAVEL,MYSQL,PHP">
-                    <div class="relative aspect-[4/5] overflow-hidden">
-                        <img src="{{ asset('images/projects/audit.png') }}" alt="Audit System App" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-void-black via-void-black/30 to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 right-0 p-8 space-y-4">
-                            <div class="flex justify-between items-end">
-                                <div>
-                                    <p class="text-[10px] font-mono uppercase text-accent-neon tracking-widest mb-1" data-i18n="projects.p3.cat">Web Application</p>
-                                    <h3 class="anton-text text-3xl text-white">PROJEK AUDIT</h3>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-[10px] font-mono text-white/40 uppercase" data-i18n="projects.rarity">Rarity</p>
-                                    <p class="font-mono text-white text-sm" data-i18n="projects.p3.epic">EPIC</p>
-                                </div>
-                            </div>
-                            <div class="space-y-2">
-                                <div class="rarity-bar"><div class="rarity-fill w-[90%]"></div></div>
-                                <div class="flex justify-between text-[10px] font-mono text-white/40">
-                                    <span data-i18n="projects.p3.util">UTILITY: SYSTEM AUDIT</span>
-                                    <span>90%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-8 space-y-4">
-                        <p class="text-xs text-secondary/80 font-mono uppercase leading-relaxed h-12 overflow-hidden" data-i18n="projects.p3.desc">Integrated audit management platform for tracking, evaluating, and reporting audit compliance and findings.</p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="text-[9px] font-mono px-2 py-1 bg-white/5 border border-white/10 text-white/60">LARAVEL</span>
-                            <span class="text-[9px] font-mono px-2 py-1 bg-white/5 border border-white/10 text-white/60">MYSQL</span>
-                            <span class="text-[9px] font-mono px-2 py-1 bg-white/5 border border-white/10 text-white/60">PHP</span>
-                        </div>
-                    </div>
-                </div>
-
+                @endforelse
             </div>
 
             {{-- More Projects (hidden by default, revealed on expand) --}}
+            @if($moreProjects->count() > 0)
             <div id="projects-more" class="overflow-hidden transition-all duration-700 ease-in-out" style="max-height: 0; opacity: 0;">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8">
-
-                    {{-- Project 4: UI/UX DESIGN --}}
+                    @foreach($moreProjects as $proj)
                     <div class="project-card liquid-glass rounded-3xl overflow-hidden group border border-white/5 hover:border-accent-neon/30 transition-all duration-500 motion-fade-up cursor-pointer"
-                        role="button" tabindex="0" aria-label="View project details for UI/UX Design Bantulpedia"
-                        data-project-title="UI/UX Design — Bantulpedia"
-                        data-project-cat="UI/UX Design"
+                        role="button" tabindex="0" aria-label="View project details for {{ $proj->title }}"
+                        data-project-title="{{ $proj->title }}"
+                        data-project-cat="{{ $proj->made_at ?? 'Web Application' }}"
                         data-project-rarity="RARE"
-                        data-project-desc="Mendesain antarmuka pengguna (UI/UX) untuk aplikasi Bantulpedia menggunakan Figma. Merancang wireframe, prototype interaktif, komponen desain sistem, dan alur pengguna yang intuitif untuk aplikasi informasi daerah Bantul."
-                        data-project-src="{{ asset('images/projects/designbantulpedia.png') }}"
-                        data-project-url="https://www.figma.com/design/KKYYQEccr79Qti7S8DvR5A/Untitled--Copy-?node-id=0-1&t=5N7coDOZfrqZPaiR-1"
-                        data-project-tags="FIGMA,UI/UX DESIGN,PROTOTYPING">
+                        data-project-desc="{{ $proj->description }}"
+                        data-project-src="{{ $proj->image_path ? asset($proj->image_path) : asset('images/projects/sipintar.png') }}"
+                        data-project-url="{{ $proj->url ?? '#' }}"
+                        data-project-tags="{{ implode(',', $proj->tags ?? []) }}">
                         <div class="relative aspect-[4/5] overflow-hidden">
-                            <img src="{{ asset('images/projects/designbantulpedia.png') }}" alt="UI/UX Design Bantulpedia" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+                            <img src="{{ $proj->image_path ? asset($proj->image_path) : asset('images/projects/sipintar.png') }}" alt="{{ $proj->title }}" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
                             <div class="absolute inset-0 bg-gradient-to-t from-void-black via-void-black/30 to-transparent"></div>
                             <div class="absolute bottom-0 left-0 right-0 p-8 space-y-4">
                                 <div class="flex justify-between items-end">
                                     <div>
-                                        <p class="text-[10px] font-mono uppercase text-accent-neon tracking-widest mb-1">UI/UX Design</p>
-                                        <h3 class="anton-text text-3xl text-white">UI/UX DESIGN</h3>
+                                        <p class="text-[10px] font-mono uppercase text-accent-neon tracking-widest mb-1">{{ $proj->made_at ?? 'Web Application' }}</p>
+                                        <h3 class="anton-text text-3xl text-white">{{ $proj->title }}</h3>
                                     </div>
                                     <div class="text-right">
                                         <p class="text-[10px] font-mono text-white/40 uppercase">Rarity</p>
@@ -616,22 +536,22 @@ sekolah. Melakukan testing, debugging, deployment, dan konfigurasi aplikasi pada
                                 <div class="space-y-2">
                                     <div class="rarity-bar"><div class="rarity-fill w-[85%]"></div></div>
                                     <div class="flex justify-between text-[10px] font-mono text-white/40">
-                                        <span>UTILITY: DESIGN SYSTEM</span>
+                                        <span>{{ $proj->link_label ? 'UTILITY: ' . strtoupper($proj->link_label) : ($proj->made_at ? 'UTILITY: ' . strtoupper($proj->made_at) : 'UTILITY: DESIGN SYSTEM') }}</span>
                                         <span>85%</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="p-8 space-y-4">
-                            <p class="text-xs text-secondary/80 font-mono uppercase leading-relaxed h-12 overflow-hidden">UI/UX design prototype for Bantulpedia regional info app using Figma.</p>
+                            <p class="text-xs text-secondary/80 font-mono uppercase leading-relaxed h-12 overflow-hidden">{{ $proj->description }}</p>
                             <div class="flex flex-wrap gap-2">
-                                <span class="text-[9px] font-mono px-2 py-1 bg-white/5 border border-white/10 text-white/60">FIGMA</span>
-                                <span class="text-[9px] font-mono px-2 py-1 bg-white/5 border border-white/10 text-white/60">UI/UX DESIGN</span>
-                                <span class="text-[9px] font-mono px-2 py-1 bg-white/5 border border-white/10 text-white/60">PROTOTYPING</span>
+                                @foreach($proj->tags ?? [] as $tag)
+                                <span class="text-[9px] font-mono px-2 py-1 bg-white/5 border border-white/10 text-white/60">{{ $tag }}</span>
+                                @endforeach
                             </div>
                         </div>
                     </div>
-
+                    @endforeach
                 </div>
             </div>
 
@@ -644,6 +564,7 @@ sekolah. Melakukan testing, debugging, deployment, dan konfigurasi aplikasi pada
                     <i id="projects-toggle-icon" data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300 group-hover:translate-y-0.5"></i>
                 </button>
             </div>
+            @endif
 
         </div>
     </section>
